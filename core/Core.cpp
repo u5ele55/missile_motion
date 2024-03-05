@@ -17,7 +17,9 @@ Core::Core()
     : model(nullptr),
     solver(nullptr)
 {
-    ParametersInputter paramsCreator(FILENAMES.at("parameters"));
+    ParametersInputter paramsCreator(
+        FILENAMES.at("missile"), FILENAMES.at("launch")
+    );
     params = paramsCreator.create();
 
     GlobalScope::getInstance().setParameters(params);

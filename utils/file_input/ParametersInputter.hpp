@@ -5,9 +5,13 @@
 class ParametersInputter : IFileInputter<Parameters>
 {
 private:
-    std::ifstream file;
+    std::ifstream missileFile;
+    std::ifstream launchFile;
 public:
-    ParametersInputter(const std::string& filename);
+    ParametersInputter(
+        const std::string& missileFilename,
+        const std::string& launchFilename
+    );
     Parameters* create();
     ~ParametersInputter();
 };
