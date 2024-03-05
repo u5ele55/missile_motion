@@ -11,6 +11,7 @@ private:
     FunctionCreator creator;
     
     Function<double, AtmosphereParameters> *atmosphere;
+    Function<double, double> *axialDumpingMoment;
 
     Parameters * params;
 public:
@@ -19,7 +20,8 @@ public:
     static GlobalScope& getInstance();
     ~GlobalScope();
 
-    Function<double, AtmosphereParameters>& getAtmosphereParamsEvaluator();
+    Function<double, AtmosphereParameters>* getAtmosphereParamsEvaluator();
+    Function<double, double>* getAxialDumpingMomentEvaluator();
 
     void setParameters(Parameters * params);
 };

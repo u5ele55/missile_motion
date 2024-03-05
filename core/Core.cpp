@@ -27,8 +27,21 @@ Core::Core()
 
 Vector Core::calculateEndpoint()
 {
-    // TODO 
-    return {1,1,1};
+    model = new MissileSystem(params, {
+        params->launch.velocity,
+        params->launch.elevationAngle,
+        params->launch.headingAngle,
+        0,
+        Constants::Earth::MINOR_AXIS + 1,
+        0,
+        params->launch.axialAngularVelocity,
+        (*GlobalScope::getInstance().getAtmosphereParamsEvaluator())(0).pressure
+    });
+    solver = new RK4Solver(model, params->modeling.integrationStep);
+
+    for(int i = 0; i < 100; i ++) {
+        std::cout << i << " " << solver->solve(i) << '\n';
+    }
 }
 
 Core::~Core()

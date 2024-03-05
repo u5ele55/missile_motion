@@ -17,6 +17,7 @@ namespace Constants
     namespace Common
     {
         const double G = 6.67430e-11;
+        const double R = 287.05287;
     } // namespace Common
     
 } // namespace Constants
