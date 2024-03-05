@@ -2,7 +2,6 @@
 
 #include <cmath>
 
-#include <iostream>
 // method from https://math.stackexchange.com/questions/511370/how-to-rotate-one-vector-about-another
 Vector LinAlg::rotateAbout(const Vector &a, const Vector &b, double angle)
 {
