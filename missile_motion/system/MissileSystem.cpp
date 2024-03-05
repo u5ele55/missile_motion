@@ -5,17 +5,9 @@
 
 #include <cmath>
 
-MissileSystem::MissileSystem(Parameters *params, Vector initialCoordinates, Vector initialVelocity)
+MissileSystem::MissileSystem(Parameters *params, Vector initialState)
     : params(params),
-    initialState({
-        initialCoordinates[0], 
-        initialCoordinates[1], 
-        initialCoordinates[2], 
-        initialVelocity[0], 
-        initialVelocity[1], 
-        initialVelocity[2]
-    }),
-    initialCoordinates(initialCoordinates)
+    initialState(initialState)
 {
     auto &scope = GlobalScope::getInstance();
 
@@ -25,8 +17,9 @@ MissileSystem::MissileSystem(Parameters *params, Vector initialCoordinates, Vect
 
 void MissileSystem::f(Vector &state, double time) const
 {
-    double x = state[0], y = state[1], z = state[2];
-    double vx = state[3], vy = state[4], vz = state[5];
+    double v_k = state[0], theta = state[1], psi = state[2];
+    double x = state[3], y = state[4], z = state[5];
+    double omega_x = state[6], p = state[7];
 
     // TODO: write DE's
 }

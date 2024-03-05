@@ -8,12 +8,11 @@ class MissileSystem : public ISystem
 {
 private:
     Vector initialState;
-    Vector initialCoordinates;
     Parameters *params;
 
     Function<double, AtmosphereParameters> *atmosphere;
 public:
-    MissileSystem(Parameters * params, Vector initialCoordinates, Vector initialVelocity);
+    MissileSystem(Parameters * params, Vector initialState);
     void f(Vector &state, double time) const;
     Vector getInitialState() const;
 }; 
