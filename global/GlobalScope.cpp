@@ -1,5 +1,4 @@
 #include "GlobalScope.hpp"
-#include "Function/physics/AirDensityExponentialModel.hpp"
 #include "file_input/filenames.hpp"
 
 #include <stdexcept>
