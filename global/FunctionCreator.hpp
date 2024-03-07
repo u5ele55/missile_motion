@@ -4,6 +4,7 @@
 #include <vector>
 #include "Function/Function.hpp"
 #include "Function/interpolation/ConditionalLinearInterpolation.hpp"
+#include "Function/polynom/ConditionalPolynom.hpp"
 
 class FunctionCreator
 {
@@ -15,4 +16,6 @@ public:
     Function<double, double> *createCubicSplineInterpolator(const std::string& filename);
     Function<double, double> *createCatmullRomSplineInterpolator(const std::string& filename);
     ConditionalLinearInterpolation *createConditionalLinearInterpolator(const std::string& filename, bool allowExtrapolation = false);
+
+    ConditionalPolynom *createConditionalPolynom(const std::string& filename);
 };

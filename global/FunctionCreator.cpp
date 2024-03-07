@@ -6,7 +6,7 @@
 
 #include <fstream>
 
-
+#include <iostream>
 std::pair<std::vector<double>, std::vector<double>> FunctionCreator::extractXY(const std::string &filename)
 {
     std::ifstream file(filename);
@@ -85,4 +85,15 @@ ConditionalLinearInterpolation *FunctionCreator::createConditionalLinearInterpol
     ConditionalLinearInterpolation *fun = new ConditionalLinearInterpolation(conds, x, y, allowExtrapolation);
 
     return fun;
+}
+
+ConditionalPolynom *FunctionCreator::createConditionalPolynom(const std::string &filename)
+{
+    std::ifstream file(filename);
+
+    int M;
+    file >> M;
+    // TODO
+
+    file.close();
 }
