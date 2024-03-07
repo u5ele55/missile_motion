@@ -27,20 +27,34 @@ Core::Core()
 
 Vector Core::calculateEndpoint()
 {
+    double pi_0 = pow(1 - Constants::Common::G * (Constants::Earth::MAJOR_AXIS + 1), 5.4); // approximation
+
+    Vector startBLH = {0, 0, 2};
+    auto startECEF = blh2ecef(startBLH);
+    std::cout << params->launch.elevationAngle << " " << params->launch.headingAngle << '\n';
     model = new MissileSystem(params, {
         params->launch.velocity,
         params->launch.elevationAngle,
         params->launch.headingAngle,
         0,
-        Constants::Earth::MINOR_AXIS + 1,
+        0,
         0,
         params->launch.axialAngularVelocity,
-        (*GlobalScope::getInstance().getAtmosphereParamsEvaluator())(0).pressure
+        pi_0
     });
-    solver = new RK4Solver(model, params->modeling.integrationStep);
+    solver = new RK4Solver(
+        model,
+        0.05 
+        //params->modeling.integrationStep
+    );
 
-    for(int i = 0; i < 100; i ++) {
-        std::cout << i << " " << solver->solve(i) << '\n';
+    std::ofstream file("trajectory.txt");
+
+    for(int i = 0; i < 150; i ++) {
+        const auto &state = solver->solve(i);
+        // std::cout << i << " " << state << '\n';
+        Vector r = {state[3], state[4], state[5]};
+        file << r << '\n';
     }
 }
 
