@@ -13,6 +13,9 @@ private:
     Function<double, AtmosphereParameters> *atmosphere;
     Function<double, double> *virtualTemperature;
     Function<double, double> *axialDumpingMoment;
+
+    Function<double, double> *Knm;
+    Function<double, double> *Cx;
 public:
     MissileSystem(Parameters * params, Vector initialState);
     ~MissileSystem();

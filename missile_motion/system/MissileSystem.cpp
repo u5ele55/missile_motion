@@ -15,6 +15,8 @@ MissileSystem::MissileSystem(Parameters *params, Vector initialState)
     atmosphere = scope.getAtmosphereParamsEvaluator();
     virtualTemperature = new VirtualTemperature;
     axialDumpingMoment = scope.getAxialDumpingMomentEvaluator();
+    Cx = scope.getCxEvaluator();
+    Knm = scope.getKnmEvaluator();
 }
 
 MissileSystem::~MissileSystem()
@@ -47,14 +49,15 @@ void MissileSystem::f(Vector &state, double time) const
     
     double g = 9.81;
     double i_z = params->missile.derivationCoefficient;
+    double i_x = params->missile.formCoefficient;
     double J_x = params->missile.axialInertiaMoment;
     double L = params->missile.length, m = params->missile.mass;
     double M = v_k / atm.soundSpeed; 
     double tau = (*virtualTemperature)(y);
     double m_omega_x = (*axialDumpingMoment)(M);
     double h = params->missile.distanceBaseCM + 0.57 * params->missile.length - 0.16 * params->missile.diameter;
-    auto K_nm = [](double mach) {return 0.206;}; // todo: make K_nm interpolated
-    double f_z = L*L / (params->missile.diameter * h) * K_nm(M);
+    
+    double f_z = L*L / (params->missile.diameter * h) * (*Knm)(M);
     double q = (*atmosphere)(0).density * pow((*atmosphere)(0).soundSpeed, 2) * M*M * p / 2; // mb incorrect (p)
     double S_m = M_PI * pow(params->missile.diameter / 2, 2);
     // right side
@@ -69,14 +72,6 @@ void MissileSystem::f(Vector &state, double time) const
     // double omega_x_d = -m_omega_x * p * q * S_m * L*L * omega_x / (J_x * v_k);
     double omega_x_d = -m_omega_x * q * S_m * L / J_x - omega_x * L / v_k;
     double p_d = -g * p * y_d / (Constants::Common::R * tau);
-    if (time > 1000) {
-    std::cout << "m_omega_x " << m_omega_x << '\n';
-    std::cout << "p " << p << '\n';
-    std::cout << "q " << q << '\n';
-    std::cout << "v_k " << v_k << '\n' << '\n';
-    std::cout << "omega_x_d " << omega_x_d << '\n';
-
-    }
 
     state[0] = v_k_d;
     state[1] = theta_d;

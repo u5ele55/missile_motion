@@ -2,7 +2,7 @@
 
 #include "Function/polynom/Polynom.hpp"
 
-class ConditionalPolynom : Function<double, double>
+class ConditionalPolynom : public Function<double, double>
 {
 private:
     std::vector< std::pair<double, Polynom*> > use;

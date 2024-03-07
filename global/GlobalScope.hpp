@@ -13,6 +13,9 @@ private:
     Function<double, AtmosphereParameters> *atmosphere;
     Function<double, double> *axialDumpingMoment;
 
+    Function<double, double> *Cx;
+    Function<double, double> *Knm;
+
     Parameters * params;
 public:
     GlobalScope(GlobalScope const&)    = delete;
@@ -22,6 +25,8 @@ public:
 
     Function<double, AtmosphereParameters>* getAtmosphereParamsEvaluator();
     Function<double, double>* getAxialDumpingMomentEvaluator();
+    Function<double, double>* getCxEvaluator();
+    Function<double, double>* getKnmEvaluator();
 
     void setParameters(Parameters * params);
 };

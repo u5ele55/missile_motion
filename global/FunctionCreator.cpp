@@ -91,9 +91,26 @@ ConditionalPolynom *FunctionCreator::createConditionalPolynom(const std::string 
 {
     std::ifstream file(filename);
 
-    int M;
-    file >> M;
-    // TODO
-
+    int nConds, deg;
+    file >> nConds;
+    std::vector<double> conds(nConds);
+    std::vector<int> degs(nConds+1);
+    std::vector<std::vector<double>> coefs(nConds+1);
+    
+    for (int i = 0; i <= nConds; i ++) {
+        file >> deg;
+        std::vector<double> curCoefs(deg+1);
+        for (int j = 0; j < deg + 1; j ++) {
+            file >> curCoefs[j];
+        }
+        degs[i] = deg;
+        coefs[i] = curCoefs;
+        if (i != nConds-1) 
+            file >> conds[i];
+    }
     file.close();
+
+    ConditionalPolynom *cpol = new ConditionalPolynom(conds, degs, coefs);
+
+    return cpol;
 }
