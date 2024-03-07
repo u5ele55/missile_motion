@@ -3,6 +3,8 @@
 #include <stdexcept>
 #include <cmath>
 
+/// @brief Creates zero vector of a given size
+/// @param n size of a vector
 Vector::Vector(int n) : n(n) {
     this->data = new double[n];
     for (int i = 0; i < n; i++) {
