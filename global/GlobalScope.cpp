@@ -4,7 +4,8 @@
 #include <stdexcept>
 
 GlobalScope::GlobalScope() 
-:   atmosphere(nullptr)
+:   atmosphere(nullptr),
+    axialDumpingMoment(nullptr)
 {}
 
 GlobalScope& GlobalScope::getInstance()
@@ -24,8 +25,8 @@ Function<double, AtmosphereParameters> *GlobalScope::getAtmosphereParamsEvaluato
 
 Function<double, double> *GlobalScope::getAxialDumpingMomentEvaluator()
 {
-    if (atmosphere == nullptr) {
-        axialDumpingMoment = creator.createLinearInterpolator(FILENAMES.at("axial_dumping_moment"));
+    if (axialDumpingMoment == nullptr) {
+        axialDumpingMoment = creator.createLinearInterpolator(FILENAMES.at("axial_dumping_moment"), true);
     }
     return axialDumpingMoment;
 }
