@@ -96,6 +96,8 @@ ConditionalPolynom *FunctionCreator::createConditionalPolynom(const std::string 
     std::vector<double> conds(nConds);
     std::vector<int> degs(nConds+1);
     std::vector<std::vector<double>> coefs(nConds+1);
+
+    char condPrefix;
     
     for (int i = 0; i <= nConds; i ++) {
         file >> deg;
@@ -105,8 +107,8 @@ ConditionalPolynom *FunctionCreator::createConditionalPolynom(const std::string 
         }
         degs[i] = deg;
         coefs[i] = curCoefs;
-        if (i != nConds-1) 
-            file >> conds[i];
+        if (i != nConds) 
+            file >> condPrefix >> conds[i];
     }
     file.close();
 
