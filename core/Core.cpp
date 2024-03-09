@@ -31,14 +31,14 @@ Vector Core::calculateEndpoint()
 
     Vector startBLH = {0, 0, 2};
     auto startECEF = blh2ecef(startBLH);
-    std::cout << params->launch.elevationAngle << " " << params->launch.headingAngle << '\n';
+    
     model = new MissileSystem(params, {
         params->launch.velocity,
         params->launch.elevationAngle,
         params->launch.headingAngle,
-        0,
-        0,
-        0,
+        params->location.distance,
+        params->location.height,
+        params->location.lateralDeviaton,
         params->launch.axialAngularVelocity,
         pi_0
     });
