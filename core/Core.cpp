@@ -15,7 +15,8 @@
 
 Core::Core()
     : model(nullptr),
-    solver(nullptr)
+    solver(nullptr),
+    flightTime(-1)
 {
     ParametersInputter paramsCreator(
         FILENAMES.at("missile"), FILENAMES.at("launch")
@@ -27,10 +28,8 @@ Core::Core()
 
 Vector Core::calculateEndpoint()
 {
-    double pi_0 = pow(1 - Constants::Common::G * (Constants::Earth::MAJOR_AXIS + 1), 5.4); // approximation
-
-    Vector startBLH = {0, 0, 2};
-    auto startECEF = blh2ecef(startBLH);
+    double G_tau_1 = -6.328e-3; 
+    double pi_0 = pow(1 - G_tau_1 * params->location.height, 5.4); // approximation
     
     model = new MissileSystem(params, {
         params->launch.velocity,
@@ -44,18 +43,27 @@ Vector Core::calculateEndpoint()
     });
     solver = new RK4Solver(
         model,
-        0.05 
-        //params->modeling.integrationStep
+        params->modeling.integrationStep
     );
 
     std::ofstream file("trajectory.txt");
 
+    Vector state(8);
+    Vector lastState(8);
+
     for(int i = 0; i < 150; i ++) {
-        const auto &state = solver->solve(i);
-        // std::cout << i << " " << state << '\n';
+        lastState = state;
+        state = solver->solve(i);
         Vector r = {state[3], state[4], state[5]};
+        std::cout << i << " " << state << '\n';
         file << r << '\n';
+        if (lastState == state) {
+            flightTime = i;
+            break;
+        }
     }
+    std::cout << "Flight time: " << flightTime << " s \n";
+    return {state[3], state[4], state[5]};
 }
 
 Core::~Core()

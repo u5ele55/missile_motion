@@ -10,6 +10,8 @@ private:
     Parameters * params;
     AbstractSolver * solver;
     ISystem * model;
+
+    double flightTime;
 public:
     Core();
 
