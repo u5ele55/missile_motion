@@ -76,16 +76,17 @@ void MissileSystem::f(Vector &state, double time) const
     double theta_d_ar = -qSmixCx * sin(eps_w2) / (m * v_k);
     double psi_d_ar = -qSmixCx * sin(eps_w1) * cos(eps_w2) / (m * v_k * cos(theta));
     // right side
-    double v_k_d = -g * sin(theta) + v_k_d_ar;
+    double drag = 0.5 * atm.density * S_m * (*Cx)(y) * v_k*v_k; // not from GOST
+    double v_k_d = -g * sin(theta) + v_k_d_ar - drag / m;
     double theta_d = -g * cos(theta) / v_k + theta_d_ar;
     double psi_d = -i_z * f_z * J_x * omega_x * theta_d / (L * m * v_k * cos(theta)) + psi_d_ar;
+
 
     double x_d = v_k * cos(theta) * cos(psi);
     double y_d = v_k * sin(theta);
     double z_d = -v_k * cos(theta) * sin(psi);
 
-    // double omega_x_d = -m_omega_x * p * q * S_m * L*L * omega_x / (J_x * v_k);
-    double omega_x_d = -m_omega_x * q * S_m * L / J_x - omega_x * L / v_k;
+    double omega_x_d = -m_omega_x * p * q * S_m * L*L * omega_x / (J_x * v_k);
     double p_d = -g * p * y_d / (Constants::Common::R * tau);
 
     state[0] = v_k_d;
