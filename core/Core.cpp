@@ -50,6 +50,7 @@ Vector Core::calculateEndpoint()
 
     Vector state(8);
     Vector lastState(8);
+    double maxHeight = 0;
 
     for(int i = 0; i < 150; i ++) {
         lastState = state;
@@ -57,13 +58,19 @@ Vector Core::calculateEndpoint()
         Vector r = {state[3], state[4], state[5]};
         std::cout << i << " " << state << '\n';
         file << r << '\n';
+        maxHeight = maxHeight > state[4] ? maxHeight : state[4];
         if (lastState == state) {
             flightTime = i;
             break;
         }
     }
+    double x = state[3], y = state[4], z = state[5];
+
     std::cout << "Flight time: " << flightTime << " s \n";
-    return {state[3], state[4], state[5]};
+    std::cout << "Distance: " << sqrt(x*x + z*z) << " m \n";
+    std::cout << "Max height: " << maxHeight << " m \n";
+
+    return {x, y, z};
 }
 
 Core::~Core()
