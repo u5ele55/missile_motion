@@ -46,7 +46,7 @@ void MissileSystem::f(Vector &state, double time) const
     double M = v_k / atm.soundSpeed; 
     double tau = (*virtualTemperature)(y);
     double m_omega_x = (*axialDumpingMoment)(M);
-    double h = params->missile.distanceBaseCM + 0.57 * params->missile.length - 0.16 * params->missile.diameter;
+    double h = params->missile.distanceBaseCM + 0.57 * params->missile.lengthHead - 0.16 * params->missile.diameter;
     
     double f_z = L*L / (params->missile.diameter * h) * (*Knm)(M);
     double q = (*atmosphere)(0).density * pow((*atmosphere)(0).soundSpeed, 2) * M*M * p / 2;
