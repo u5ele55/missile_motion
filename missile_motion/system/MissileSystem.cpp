@@ -56,14 +56,12 @@ void MissileSystem::f(Vector &state, double time) const
     double w = params->environment.windVelocity;
     double a_w = params->environment.windAzimuth;
     double gamma_w = params->environment.windElevationAngle;
-    
-    double w_x = w * cos(a_w) * sin(gamma_w);
-    double w_y = w * sin(gamma_w);
-    double w_z = w * cos(a_w) * cos(gamma_w);
 
-    double w_x_k = w_x * cos(theta) * cos(psi) + w_y * sin(theta) - w_z * cos(theta) * sin(psi);
-    double w_y_k = -w_x * sin(theta) * cos(psi) + w_y * cos(theta) + w_z * sin(theta) * sin(psi);
-    double w_z_k = w_x * sin(psi) + w_z * cos(psi);
+    double angle = a_w - (params->launch.azimuth - psi); // todo
+
+    double w_x_k = -w * cos(angle) * cos(theta);
+    double w_y_k = w * cos(angle) * sin(theta);
+    double w_z_k = -w * sin(angle);
 
     double V_x = v_k - w_x_k, V_y = -w_y_k, V_z = -w_z_k;
     double V = sqrt(V_x*V_x + V_y*V_y + V_z*V_z);
