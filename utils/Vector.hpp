@@ -38,6 +38,8 @@ public:
 
     Vector &operator+=(const Vector &other);
 
+    Vector &operator*=(double other);
+
     Vector &operator=(const Vector &other);
 
     Vector &operator=(Vector &&other);
