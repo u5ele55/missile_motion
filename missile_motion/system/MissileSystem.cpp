@@ -19,11 +19,11 @@ MissileSystem::MissileSystem(Parameters *params, Vector initialState)
     Knm = scope.getKnmEvaluator();
 }
 
+#include <iostream>
 MissileSystem::~MissileSystem()
 {
     delete virtualTemperature;
 }
-#include <iostream>
 void MissileSystem::f(Vector &state, double time) const
 {
     double v_k = state[0], theta = state[1], psi = state[2];
@@ -53,23 +53,32 @@ void MissileSystem::f(Vector &state, double time) const
     double S_m = M_PI * pow(params->missile.diameter / 2, 2);
     
     // wind
-    double w = params->environment.windVelocity;
+    double w_velocity = params->environment.windVelocity;
     double a_w = params->environment.windAzimuth;
     double gamma_w = params->environment.windElevationAngle;
     
-    double w_x = w * cos(a_w) * sin(gamma_w);
-    double w_y = w * sin(gamma_w);
-    double w_z = w * cos(a_w) * cos(gamma_w);
+    auto shooting2trajectoryCS = [&theta, &psi](Vector v) {
+        v = LinAlg::rotateAbout(v, {0,0,1}, theta);
+        v = LinAlg::rotateAbout(v, {0,1,0}, -psi);
+        return v;
+    };
+    auto x_k = shooting2trajectoryCS(Vector{1,0,0});
+    auto y_k = shooting2trajectoryCS(Vector{0,1,0});
+    auto z_k = shooting2trajectoryCS(Vector{0,0,1});
 
-    double w_x_k = w_x * cos(theta) * cos(psi) + w_y * sin(theta) - w_z * cos(theta) * sin(psi);
-    double w_y_k = -w_x * sin(theta) * cos(psi) + w_y * cos(theta) + w_z * sin(theta) * sin(psi);
-    double w_z_k = w_x * sin(psi) + w_z * cos(psi);
+    Vector w = {w_velocity, 0, 0};
+    w = LinAlg::rotateAbout(w, {0, 0, 1}, gamma_w);
+    w = LinAlg::rotateAbout(w, {0, 1, 0}, a_w - params->launch.azimuth);
 
-    double V_x = v_k - w_x_k, V_y = -w_y_k, V_z = -w_z_k;
+    double w_k_x = w.dot(x_k);
+    double w_k_y = w.dot(y_k);
+    double w_k_z = w.dot(z_k);
+
+    double V_x = v_k - w_k_x, V_y = -w_k_y, V_z = -w_k_z;
     double V = sqrt(V_x*V_x + V_y*V_y + V_z*V_z);
 
-    double eps_w2 = asin(-w_y_k/V);
-    double eps_w1 = asin(w_z_k/(V*cos(eps_w2)));
+    double eps_w2 = asin(-w_k_y/V);
+    double eps_w1 = asin(w_k_z/(V*cos(eps_w2)));
 
     // C_k
     double C_x_k_M = (*Cx)(M) * i_x; // simplified
