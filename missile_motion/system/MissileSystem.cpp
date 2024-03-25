@@ -56,19 +56,18 @@ void MissileSystem::f(Vector &state, double time) const
     double w_velocity = params->environment.windVelocity;
     double a_w = params->environment.windAzimuth;
     double gamma_w = params->environment.windElevationAngle;
+    double windDirectionalAngle = a_w - params->launch.azimuth;
     
-    auto shooting2trajectoryCS = [&theta, &psi](Vector v) {
-        v = LinAlg::rotateAbout(v, {0,0,1}, theta);
-        v = LinAlg::rotateAbout(v, {0,1,0}, -psi);
-        return v;
-    };
-    auto x_k = shooting2trajectoryCS(Vector{1,0,0});
-    auto y_k = shooting2trajectoryCS(Vector{0,1,0});
-    auto z_k = shooting2trajectoryCS(Vector{0,0,1});
+    auto x_k = Vector{cos(psi)*cos(theta), sin(theta), sin(psi)*cos(theta)};
+    auto y_k = Vector{-sin(theta)*cos(psi), cos(theta), -sin(psi)*sin(theta)};
+    auto z_k = Vector{-sin(psi), 0, cos(psi)};
 
-    Vector w = {w_velocity, 0, 0};
-    w = LinAlg::rotateAbout(w, {0, 0, 1}, gamma_w);
-    w = LinAlg::rotateAbout(w, {0, 1, 0}, a_w - params->launch.azimuth);
+    Vector w = {
+        cos(gamma_w)*cos(windDirectionalAngle), 
+        sin(gamma_w), 
+        -sin(windDirectionalAngle)*cos(gamma_w)
+    };
+    w *= w_velocity;
 
     double w_k_x = w.dot(x_k);
     double w_k_y = w.dot(y_k);
